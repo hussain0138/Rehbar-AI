@@ -58,6 +58,18 @@ temp/
 cheating-daddy/dist/
 cheating-daddy/node_modules/
 cheating-daddy/out/
+cheating-daddy/.vite/
+
+# Large binary files
+*.zip
+*.exe
+*.dmg
+*.deb
+*.rpm
+*.tar.gz
+
+# Large desktop app builds
+cheating-daddy/Rehbar-AI-Desktop-Final-*.zip
 
 # Backend specific
 rehbar-ai/backend/node_modules/
