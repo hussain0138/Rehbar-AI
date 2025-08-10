@@ -100,13 +100,14 @@ function DownloadPortal() {
     const selectedOSData = osOptions.find(os => os.id === selectedOS)
 
     if (selectedOS === 'windows') {
-      // Direct download from your website (no GitHub profile exposure)
-      const downloadUrl = '/downloads/Rehbar-AI-Desktop-Final-v1.0.0.zip'
+      // Direct download from GitHub Releases
+      const downloadUrl = 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-v1.0.0.zip'
 
       // Create download link
       const link = document.createElement('a')
       link.href = downloadUrl
       link.download = 'Rehbar-AI-Desktop-v1.0.0.zip'
+      link.target = '_blank'
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
