@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="content-security-policy" content="script-src 'self' 'unsafe-inline'" />
+        <title>Rehbar AI - Guiding Your Voice</title>
+        <style>
+            :root {
+                --background-transparent: transparent;
+                --text-color: #e5e5e7;
+                --border-color: rgba(59, 130, 246, 0.3);
+                --header-background: rgba(15, 23, 42, 0.9);
+                --header-actions-color: rgba(147, 197, 253, 0.8);
+                --main-content-background: rgba(15, 23, 42, 0.9);
+                --button-background: rgba(30, 64, 175, 0.6);
+                --button-border: rgba(59, 130, 246, 0.3);
+                --icon-button-color: rgb(147, 197, 253);
+                --hover-background: rgba(59, 130, 246, 0.2);
+                --input-background: rgba(15, 23, 42, 0.7);
+                --placeholder-color: rgba(147, 197, 253, 0.6);
+                --focus-border-color: #3b82f6;
+                --focus-box-shadow: rgba(59, 130, 246, 0.3);
+                --input-focus-background: rgba(15, 23, 42, 0.8);
+                --scrollbar-track: rgba(15, 23, 42, 0.4);
+                --scrollbar-thumb: rgba(59, 130, 246, 0.4);
+                --scrollbar-thumb-hover: rgba(59, 130, 246, 0.6);
+                --preview-video-background: rgba(15, 23, 42, 0.95);
+                --preview-video-border: rgba(59, 130, 246, 0.3);
+                --option-label-color: rgba(147, 197, 253, 0.9);
+                --screen-option-background: rgba(15, 23, 42, 0.6);
+                --screen-option-hover-background: rgba(30, 64, 175, 0.4);
+                --screen-option-selected-background: rgba(59, 130, 246, 0.3);
+                --screen-option-text: rgba(147, 197, 253, 0.8);
+                --description-color: rgba(147, 197, 253, 0.7);
+                --start-button-background: #3b82f6;
+                --start-button-color: white;
+                --start-button-border: #3b82f6;
+                --start-button-hover-background: #2563eb;
+                --start-button-hover-border: #2563eb;
+                --text-input-button-background: #3b82f6;
+                --text-input-button-hover: #2563eb;
+                --link-color: #60a5fa;
+                --key-background: rgba(59, 130, 246, 0.2);
+                --scrollbar-background: rgba(15, 23, 42, 0.6);
+
+                /* Layout-specific variables */
+                --header-padding: 10px 20px;
+                --header-font-size: 16px;
+                --header-gap: 12px;
+                --header-button-padding: 8px 16px;
+                --header-icon-padding: 8px;
+                --header-font-size-small: 13px;
+                --main-content-padding: 20px;
+                --main-content-margin-top: 10px;
+                --icon-size: 24px;
+                --border-radius: 10px;
+                --content-border-radius: 10px;
+            }
+
+            /* Compact layout styles */
+            :root.compact-layout {
+                --header-padding: 6px 12px;
+                --header-font-size: 13px;
+                --header-gap: 6px;
+                --header-button-padding: 4px 8px;
+                --header-icon-padding: 4px;
+                --header-font-size-small: 10px;
+                --main-content-padding: 10px;
+                --main-content-margin-top: 2px;
+                --icon-size: 16px;
+                --border-radius: 4px;
+                --content-border-radius: 4px;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                overflow: hidden;
+                background: transparent;
+            }
+
+            body {
+                font-family:
+                    'Inter',
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            rehbar-ai-app {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="assets/marked-4.3.0.min.js"></script>
+        <script src="assets/highlight-11.9.0.min.js"></script>
+        <link rel="stylesheet" href="assets/highlight-vscode-dark.min.css" />
+        <script type="module" src="components/app/RehbarAiApp.js"></script>
+
+        <rehbar-ai-app id="rehbar"></rehbar-ai-app>
+        <script src="utils/renderer.js"></script>
+    </body>
+</html>

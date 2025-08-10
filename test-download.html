@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Desktop App Download</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .download-section {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        .file-info {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: left;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #2d5a2d; }
+        .error { background: #5a2d2d; }
+        .info { background: #2d4a5a; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Rehbar AI Desktop App Download Test</h1>
+    
+    <div class="download-section">
+        <h2>Desktop App Download</h2>
+        <p>Test the desktop app download functionality</p>
+        
+        <div class="file-info">
+            <strong>File:</strong> rehbar-ai-windows.exe<br>
+            <strong>Size:</strong> ~169 MB<br>
+            <strong>Platform:</strong> Windows<br>
+            <strong>Source:</strong> /downloads/rehbar-ai-windows.exe
+        </div>
+        
+        <button class="download-btn" onclick="downloadApp()">
+            📥 Download Windows App
+        </button>
+        
+        <button class="download-btn" onclick="testFileExists()">
+            🔍 Check File Exists
+        </button>
+        
+        <button class="download-btn" onclick="downloadMac()">
+            🍎 Download macOS (Placeholder)
+        </button>
+        
+        <button class="download-btn" onclick="downloadLinux()">
+            🐧 Download Linux (Placeholder)
+        </button>
+    </div>
+    
+    <div id="status"></div>
+    
+    <div class="download-section">
+        <h3>Download Instructions</h3>
+        <ol style="text-align: left;">
+            <li>Click "Download Windows App" to start the download</li>
+            <li>Your browser will download the rehbar-ai-windows.exe file</li>
+            <li>Run the executable to install Rehbar AI Desktop</li>
+            <li>Follow the installation wizard</li>
+            <li>Launch the app and sign in with your portal account</li>
+        </ol>
+    </div>
+
+    <script>
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function downloadApp() {
+            showStatus('🚀 Starting download...', 'info');
+            
+            const link = document.createElement('a');
+            link.href = '/downloads/rehbar-ai-windows.exe';
+            link.download = 'rehbar-ai-windows.exe';
+            
+            // Add the link to the document and click it
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showStatus('✅ Download started! Check your downloads folder.', 'success');
+        }
+
+        function downloadMac() {
+            showStatus('🍎 macOS version coming soon! Currently only Windows version is available.', 'info');
+        }
+
+        function downloadLinux() {
+            showStatus('🐧 Linux version coming soon! Currently only Windows version is available.', 'info');
+        }
+
+        async function testFileExists() {
+            showStatus('🔍 Checking if file exists...', 'info');
+            
+            try {
+                const response = await fetch('/downloads/rehbar-ai-windows.exe', { method: 'HEAD' });
+                
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    const sizeInMB = size ? (parseInt(size) / (1024 * 1024)).toFixed(2) : 'Unknown';
+                    showStatus(`✅ File exists! Size: ${sizeInMB} MB`, 'success');
+                } else {
+                    showStatus(`❌ File not found (Status: ${response.status})`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error checking file: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-check file on page load
+        window.onload = function() {
+            testFileExists();
+        };
+    </script>
+</body>
+</html>
