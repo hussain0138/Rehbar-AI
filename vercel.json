@@ -1,6 +1,9 @@
-{
-  "buildCommand": "cd rehbar-ai/frontend && npm run build",
-  "outputDirectory": "rehbar-ai/frontend/dist",
+﻿{
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "rootDirectory": "rehbar-ai/frontend",
   "rewrites": [
     {
       "source": "/(.*)",
