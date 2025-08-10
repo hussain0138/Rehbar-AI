@@ -1,21 +1,21 @@
 {
   "rewrites": [
     {
-      "source": "/downloads/(.*)",
-      "destination": "/downloads/$1"
+      "source": "/downloads/:file*",
+      "destination": "/downloads/:file*"
     },
     {
-      "source": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|css|js|json))",
-      "destination": "/$1"
+      "source": "/:file*.(png|jpg|jpeg|gif|svg|ico|css|js|json)",
+      "destination": "/:file*.$1"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:match*",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "headers": [
         {
           "key": "X-Content-Type-Options",
