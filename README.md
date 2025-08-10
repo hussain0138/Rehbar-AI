@@ -136,6 +136,29 @@ npm run build
 # Creates distributable files in dist/
 ```
 
+**Create Release Package:**
+```bash
+# Create ZIP for distribution
+Compress-Archive -Path "cheating-daddy\dist\rehbar-ai-win32-x64" -DestinationPath "Rehbar-AI-Desktop-v1.0.0.zip" -Force
+
+# Run release helper script
+node create-github-release.js
+```
+
+## 🚀 Deployment
+
+**Frontend (Vercel):**
+1. Connect GitHub repository to Vercel
+2. Set build command: `cd rehbar-ai/frontend && npm run build`
+3. Set output directory: `rehbar-ai/frontend/dist`
+4. Deploy automatically on push to main
+
+**Desktop App Distribution:**
+1. Build the desktop app
+2. Create ZIP package
+3. Upload to GitHub Releases (handles large files >100MB)
+4. Frontend automatically downloads from GitHub Releases
+
 ## 🔧 Configuration
 
 1. Create `.env` files in both frontend and backend directories

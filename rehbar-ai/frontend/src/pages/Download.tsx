@@ -98,14 +98,20 @@ function DownloadPortal() {
 
   const handleDownload = () => {
     const selectedOSData = osOptions.find(os => os.id === selectedOS)
-    const filename = `rehbar-ai-${selectedOS}${selectedOSData?.ext}`
+
+    // GitHub Releases download URLs
+    const downloadUrls = {
+      windows: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-v1.0.0.zip',
+      macos: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-macOS-v1.0.0.zip',
+      linux: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-Linux-v1.0.0.zip'
+    }
 
     // For Windows, we have the actual executable
     if (selectedOS === 'windows') {
-      const downloadUrl = `/downloads/${filename}`
+      const downloadUrl = downloadUrls.windows
       const link = document.createElement('a')
       link.href = downloadUrl
-      link.download = filename
+      link.download = 'Rehbar-AI-Desktop-v1.0.0.zip'
       link.click()
 
       // Show success message
