@@ -383,7 +383,7 @@ export default function Auth() {
                 disabled={loading}
               >
                 {loading ? 'Processing...' : (
-                  isLogin ? 'Sign In' : (isSignup ? 'Create Account' : 'Send Reset Link')
+                  isLogin ? 'Sign In' : (isSignup ? 'Create Account' : 'Get Access')
                 )}
               </PrimaryButton>
             </form>

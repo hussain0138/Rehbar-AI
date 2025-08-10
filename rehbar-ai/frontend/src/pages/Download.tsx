@@ -99,34 +99,22 @@ function DownloadPortal() {
   const handleDownload = () => {
     const selectedOSData = osOptions.find(os => os.id === selectedOS)
 
-    // Local download URLs (fallback to GitHub Releases when available)
-    const downloadUrls = {
-      windows: '/downloads/Rehbar-AI-Desktop-Final-v1.0.0.zip',
-      macos: '/downloads/rehbar-ai-macos.dmg',
-      linux: '/downloads/rehbar-ai-linux.AppImage'
-    }
+    if (selectedOS === 'windows') {
+      // Show message to create GitHub release first
+      alert(`
+🚀 Download Ready!
 
-    // GitHub Releases URLs (when release is created)
-    const githubReleaseUrls = {
-      windows: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-v1.0.0.zip',
-      macos: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-macOS-v1.0.0.zip',
-      linux: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-Linux-v1.0.0.zip'
-    }
+To download the Rehbar AI Desktop app:
 
-    // Try local download first, fallback to GitHub Releases
-    const downloadUrl = downloadUrls[selectedOS] || githubReleaseUrls[selectedOS]
+1. Go to: https://github.com/hussain0138/Rehbar-AI
+2. Click "Releases"
+3. Download: Rehbar-AI-Desktop-v1.0.0.zip
 
-    if (downloadUrl) {
-      const link = document.createElement('a')
-      link.href = downloadUrl
-      link.download = `rehbar-ai-${selectedOS}${selectedOSData?.ext || '.zip'}`
-      link.target = '_blank' // Open in new tab for external URLs
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+The GitHub release needs to be created first with the desktop app file.
+      `)
 
-      // Show success message
-      alert('Download started! The Rehbar AI desktop app is being downloaded.')
+      // Open GitHub releases page
+      window.open('https://github.com/hussain0138/Rehbar-AI/releases', '_blank')
     } else {
       // For other platforms, show coming soon message
       alert(`${selectedOSData?.name} version is coming soon! Currently only Windows version is available.`)
