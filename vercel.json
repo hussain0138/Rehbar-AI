@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd rehbar-ai/frontend && npm run build",
+  "outputDirectory": "rehbar-ai/frontend/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
