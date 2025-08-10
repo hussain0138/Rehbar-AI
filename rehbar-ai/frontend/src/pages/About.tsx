@@ -1,6 +1,5 @@
-import React from 'react'
 import { motion } from 'framer-motion'
-import { Target, Users, Award, Globe, MapPin, Heart, Zap, Shield } from 'lucide-react'
+import { Users, Award, Globe, MapPin, Heart, Zap } from 'lucide-react'
 
 const About = () => {
   const values = [
@@ -44,24 +43,6 @@ const About = () => {
       role: "Engineering",
       bio: "Talented engineers from Pakistan and Malaysia working together to build cutting-edge AI solutions.",
       location: "Pakistan & Malaysia"
-    }
-  ]
-
-  const milestones = [
-    {
-      year: "2024",
-      title: "Rehbar AI Founded",
-      description: "Started with a vision to revolutionize conversation assistance through AI technology."
-    },
-    {
-      year: "2024",
-      title: "Desktop App Launch",
-      description: "Released powerful desktop application for real-time conversation assistance."
-    },
-    {
-      year: "2024",
-      title: "Portal System",
-      description: "Launched exclusive portal access system for premium users and organizations."
     }
   ]
 
@@ -250,7 +231,7 @@ const About = () => {
           </div>
         </div>
       </section>
-    </div>
+    </motion.div>
   )
 }
 
