@@ -99,20 +99,31 @@ function DownloadPortal() {
   const handleDownload = () => {
     const selectedOSData = osOptions.find(os => os.id === selectedOS)
 
-    // GitHub Releases download URLs
+    // Local download URLs (fallback to GitHub Releases when available)
     const downloadUrls = {
+      windows: '/downloads/Rehbar-AI-Desktop-Final-v1.0.0.zip',
+      macos: '/downloads/rehbar-ai-macos.dmg',
+      linux: '/downloads/rehbar-ai-linux.AppImage'
+    }
+
+    // GitHub Releases URLs (when release is created)
+    const githubReleaseUrls = {
       windows: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-v1.0.0.zip',
       macos: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-macOS-v1.0.0.zip',
       linux: 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-Linux-v1.0.0.zip'
     }
 
-    // For Windows, we have the actual executable
-    if (selectedOS === 'windows') {
-      const downloadUrl = downloadUrls.windows
+    // Try local download first, fallback to GitHub Releases
+    const downloadUrl = downloadUrls[selectedOS] || githubReleaseUrls[selectedOS]
+
+    if (downloadUrl) {
       const link = document.createElement('a')
       link.href = downloadUrl
-      link.download = 'Rehbar-AI-Desktop-v1.0.0.zip'
+      link.download = `rehbar-ai-${selectedOS}${selectedOSData?.ext || '.zip'}`
+      link.target = '_blank' // Open in new tab for external URLs
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
 
       // Show success message
       alert('Download started! The Rehbar AI desktop app is being downloaded.')
