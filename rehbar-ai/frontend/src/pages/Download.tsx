@@ -100,21 +100,20 @@ function DownloadPortal() {
     const selectedOSData = osOptions.find(os => os.id === selectedOS)
 
     if (selectedOS === 'windows') {
-      // Show message to create GitHub release first
-      alert(`
-🚀 Download Ready!
+      // Direct download from GitHub Releases
+      const downloadUrl = 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-v1.0.0.zip'
 
-To download the Rehbar AI Desktop app:
+      // Create download link
+      const link = document.createElement('a')
+      link.href = downloadUrl
+      link.download = 'Rehbar-AI-Desktop-v1.0.0.zip'
+      link.target = '_blank'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
 
-1. Go to: https://github.com/hussain0138/Rehbar-AI
-2. Click "Releases"
-3. Download: Rehbar-AI-Desktop-v1.0.0.zip
-
-The GitHub release needs to be created first with the desktop app file.
-      `)
-
-      // Open GitHub releases page
-      window.open('https://github.com/hussain0138/Rehbar-AI/releases', '_blank')
+      // Show success message
+      alert('Download started! The Rehbar AI desktop app is being downloaded.')
     } else {
       // For other platforms, show coming soon message
       alert(`${selectedOSData?.name} version is coming soon! Currently only Windows version is available.`)
