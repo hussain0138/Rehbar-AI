@@ -176,90 +176,92 @@ export default function Landing() {
       transition={{ duration: 0.5 }}
       className="min-h-screen"
     >
-      {/* Hero Section */}
-      <section className="hero-section relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20">
-        {/* 3D Background */}
-        <div className="absolute inset-0 opacity-30">
-          <HeroScene />
-        </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mobile-center">
-          <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl hero-font font-black text-white mb-6 leading-tight mobile-center"
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Invisible AI to{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
-              Guide
-            </span>
-            <br />
-            Your Voice in Every{' '}
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-400 bg-clip-text text-transparent">
-              Conversation
-            </span>
-          </motion.h1>
+       <section className="hero-section relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-20 lg:pt-0 bg-black">
+      {/* 3D Background (optional) */}
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        {/* If you have HeroScene available, uncomment: */}
+        {/* <HeroScene /> */}
+      </div>
 
-          <motion.p
-            className="text-lg sm:text-xl text-white/70 mb-8 max-w-3xl mx-auto leading-relaxed mobile-center"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Powerful desktop AI assistant exclusively for portal users. Download, extract the ZIP file,
-            and run the .exe to transform your conversations with intelligent real-time guidance.
-          </motion.p>
+      {/* Centered Content */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
+        <motion.h1
+          className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl hero-font font-black text-white mb-6 leading-tight"
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          Invisible AI to{' '}
+          <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+            Guide
+          </span>
+          <br />
+          Your Voice in Every{' '}
+          <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-400 bg-clip-text text-transparent">
+            Conversation
+          </span>
+        </motion.h1>
 
-          <motion.div
-            className="flex flex-col sm:flex-row mobile-gap justify-center items-center mb-12"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <Link to="/login">
-              <PrimaryButton size="lg" className="group touch-button text-responsive-base">
-                Get Started Today
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </PrimaryButton>
-            </Link>
+        <motion.p
+          className="text-lg sm:text-xl text-white/70 mb-6 max-w-3xl leading-relaxed"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          Powerful desktop AI assistant exclusively for portal users. Download, extract the ZIP file,
+          and run the .exe to transform your conversations with intelligent real-time guidance.
+        </motion.p>
 
-            <motion.button
-              className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-lg">
-                <Play className="w-5 h-5 ml-1" />
-              </div>
-              <span className="font-medium">Watch Demo</span>
-            </motion.button>
-          </motion.div>
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6"
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <Link to="/signup">
+            <PrimaryButton size="lg" className="group touch-button text-responsive-base">
+              Get Started Today
+              {/* <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" /> */}
+            </PrimaryButton>
+          </Link>
 
-          <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 text-white/60"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
+          <button
+            type="button"
+            className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors"
           >
-            <div className="flex items-center space-x-2">
-              <Monitor className="w-5 h-5 text-blue-400" />
-              <span>Desktop App Only</span>
+            <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-lg">
+              <Play className="w-5 h-5 ml-1" />
             </div>
-            <div className="flex items-center space-x-2">
-              <Lock className="w-5 h-5 text-purple-400" />
-              <span>Portal Access Required</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <span>Free Trial Available</span>
-            </div>
-          </motion.div>
-        </div>
-        
-        <WaveDivider className="absolute bottom-0 text-black" />
-      </section>
+            <span className="font-medium">Watch Demo</span>
+          </button>
+        </motion.div>
 
+        <motion.div
+          className="mt-4 flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-8 text-white/60 text-sm"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
+          <div className="flex items-center space-x-2">
+            <Monitor className="w-5 h-5 text-blue-400" />
+            <span>Desktop App Only</span>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Lock className="w-5 h-5 text-purple-400" />
+            <span>Portal Access Required</span>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 text-green-400" />
+            <span>Free Trial Available</span>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Optional wave divider if you used it before */}
+      {/* <WaveDivider className="absolute bottom-0 text-black" /> */}
+    </section>
       {/* Feature Strip */}
       <section className="py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

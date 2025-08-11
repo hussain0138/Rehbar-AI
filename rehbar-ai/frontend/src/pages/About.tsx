@@ -26,25 +26,75 @@ const About = () => {
   ]
 
   const team = [
-    {
-      name: "Ahmed Ali",
-      role: "CEO & Founder",
-      bio: "Visionary leader with expertise in AI technology and business development, driving Rehbar AI's mission.",
-      location: "Islamabad, Pakistan"
-    },
-    {
-      name: "Bisma Ijaz",
-      role: "CTO & Co-Founder",
-      bio: "Technical expert specializing in voice recognition and real-time AI systems development.",
-      location: "Kuala Lumpur, Malaysia"
-    },
-    {
-      name: "Development Team",
-      role: "Engineering",
-      bio: "Talented engineers from Pakistan and Malaysia working together to build cutting-edge AI solutions.",
-      location: "Pakistan & Malaysia"
-    }
-  ]
+  {
+    name: "Hassan Ali",
+    role: "CEO & Founder",
+    bio: "Visionary leader with expertise in AI technology and business development, driving Rehbar AI's mission.",
+    location: "Islamabad, Pakistan"
+  },
+  {
+    name: "Bisma Ijaz",
+    role: "CTO & Co-Founder",
+    bio: "Technical expert specializing in voice recognition and real-time AI systems development.",
+    location: "E-12, Islamabad, Pakistan"
+  },
+
+  {
+    name: "Nurul Afiqah",
+    role: "Lead UI/UX Designer",
+    bio: "Creative mind crafting elegant and intuitive designs that make complex AI tools feel effortless.",
+    location: "Kuala Lumpur, Malaysia"
+  },
+  {
+    name: "Sara Tan",
+    role: "Senior Frontend Developer",
+    bio: "JavaScript wizard building pixel-perfect interfaces and pushing the limits of React-based SaaS.",
+    location: "Penang, Malaysia"
+  },
+  {
+    name: "Yura-bint-e-Ullah",
+    role: "AI Solutions Architect",
+    bio: "Innovative architect designing end-to-end AI-powered SaaS workflows tailored for global scalability.",
+    location: "Johor Bahru, Malaysia"
+  },
+  {
+    name: "Pamela Yeoh",
+    role: "Product Designer",
+    bio: "Passionate about merging aesthetics with functionality, delivering beautiful yet practical designs.",
+    location: "Kuala Lumpur, Malaysia"
+  },
+  {
+    name: "Adila Rahman",
+    role: "Quality Assurance Lead",
+    bio: "Detail-obsessed QA specialist making sure every product release meets the highest performance standards.",
+    location: "Johor Bahru, Malaysia"
+  },
+  {
+    name: "Hussain Ali",
+    role: "Backend Engineer",
+    bio: "Expert in building robust, scalable APIs powering real-time AI processing and analytics.",
+    location: "Karachi, Pakistan"
+  },
+  {
+    name: "Haniyah Zafar",
+    role: "AI Model Specialist",
+    bio: "Passionate about training AI models that understand context and deliver human-like responses.",
+    location: "Rawalpindi, Pakistan"
+  },
+  {
+    name: "Minahil Asim",
+    role: "Marketing & Growth Lead",
+    bio: "Creative storyteller turning complex AI solutions into compelling narratives that drive adoption.",
+    location: "Lahore, Pakistan"
+  },
+  {
+    name: "Development Team",
+    role: "Engineering",
+    bio: "Talented engineers from Pakistan and Malaysia working together to build cutting-edge AI solutions.",
+    location: "Pakistan & Malaysia"
+  }
+];
+
 
   return (
     <motion.div

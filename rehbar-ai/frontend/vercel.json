@@ -5,7 +5,7 @@
       "destination": "/downloads/:file*"
     },
     {
-      "source": "/:file*.(png|jpg|jpeg|gif|svg|ico|css|js|json)",
+      "source": "/:file*.(png|jpg|jpeg|gif|svg|ico|css|js|json|zip|exe)",
       "destination": "/:file*.$1"
     },
     {

@@ -48,8 +48,8 @@ const PricingPlans: React.FC = () => {
       const fallbackPlans = {
         FREE: {
           id: 'free',
-          name: 'Free Trial',
-          price: 0,
+          name: 'Free Trial-Just One Dollor',
+          price: 1,
           duration: '3 days',
           features: [
             'Chrome Extension Access',
@@ -66,7 +66,7 @@ const PricingPlans: React.FC = () => {
         PRO: {
           id: 'pro',
           name: 'Professional',
-          price: 5,
+          price: 9.99,
           duration: 'monthly',
           features: [
             'All Free Features',
@@ -85,7 +85,7 @@ const PricingPlans: React.FC = () => {
         PREMIUM: {
           id: 'premium',
           name: 'Premium Enterprise',
-          price: 99,
+          price: 19.99,
           duration: 'monthly',
           features: [
             'All Pro Features',

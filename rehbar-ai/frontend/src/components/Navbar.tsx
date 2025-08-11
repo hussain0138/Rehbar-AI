@@ -70,7 +70,7 @@ export const Navbar = () => {
   transition={{ duration: 0.2 }}
   className="scale-[1.1]" // about 10% bigger
 >
-  <Logo size="md" showText={false} />
+  <Logo size="md" />
 </motion.div>
 
 
@@ -144,7 +144,7 @@ export const Navbar = () => {
               Portal Login
             </Link>
             <PrimaryButton href="/auth" size="md">
-              Access Portal
+              Admin Portal
             </PrimaryButton>
           </div>
 
