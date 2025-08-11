@@ -6,13 +6,9 @@ import Logo from './Logo'
 import {
   Menu,
   X,
-  MessageSquare,
   ChevronDown,
-  Chrome,
   Monitor,
-  Mic,
   BarChart3,
-  HelpCircle,
   ArrowRight
 } from 'lucide-react'
 
@@ -26,7 +22,6 @@ export const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
-
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -47,7 +42,7 @@ export const Navbar = () => {
           href: '/dashboard',
           icon: <BarChart3 className="w-4 h-4" />,
           description: 'Access your portal and downloads'
-        },
+        }
       ]
     },
     { name: 'Pricing', href: '/pricing' },
@@ -69,16 +64,16 @@ export const Navbar = () => {
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Logo size="md" showText={false} />
-            </motion.div>
-          </Link>
+        <div className="flex items-center justify-between h-20 sm:h-24">
+    <motion.div
+  whileHover={{ scale: 1.05 }}
+  transition={{ duration: 0.2 }}
+  className="scale-[1.1]" // about 10% bigger
+>
+  <Logo size="md" showText={false} />
+</motion.div>
+
+
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">

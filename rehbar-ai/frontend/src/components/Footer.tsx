@@ -66,7 +66,12 @@ export const Footer = () => {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center mb-6">
-              <Logo size="lg" showText={false} />
+<Logo
+  className="h-40 w-auto max-h-none"
+  size="lg"
+  showText={false}
+/>
+
             </Link>
             
             <p className="text-white/70 mb-6 max-w-sm">
