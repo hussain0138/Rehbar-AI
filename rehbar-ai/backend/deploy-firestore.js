@@ -39,7 +39,7 @@ const initialPlans = [
   {
     id: 'pro',
     name: 'Professional',
-    price: 29,
+    price: 5,
     duration: 'month',
     features: [
       'Advanced AI assistance',

@@ -101,7 +101,7 @@ function DownloadPortal() {
 
     if (selectedOS === 'windows') {
       // Direct download from GitHub Releases
-      const downloadUrl = 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-v1.0.0.zip'
+        const downloadUrl = 'https://github.com/hussain0138/Rehbar-AI/releases/download/v1.0.0/Rehbar-AI-Desktop-Final-v1.0.0.zip'
 
       // Create download link
       const link = document.createElement('a')

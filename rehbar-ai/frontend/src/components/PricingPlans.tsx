@@ -66,7 +66,7 @@ const PricingPlans: React.FC = () => {
         PRO: {
           id: 'pro',
           name: 'Professional',
-          price: 29,
+          price: 5,
           duration: 'monthly',
           features: [
             'All Free Features',
