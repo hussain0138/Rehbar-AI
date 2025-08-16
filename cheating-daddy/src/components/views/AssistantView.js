@@ -303,7 +303,7 @@ export class AssistantView extends LitElement {
     constructor() {
         super();
         this.responses = [];
-        this.currentResponseIndex = -1;
+        this.currentResponseIndex = 0; // Start at 0 instead of -1
         this.selectedProfile = 'interview';
         this.onSendText = () => {};
         this._lastAnimatedWordCount = 0;
@@ -337,13 +337,10 @@ export class AssistantView extends LitElement {
         // Check if marked is available
         if (typeof window !== 'undefined' && window.marked) {
             try {
-                // Configure marked for better security and formatting
-                window.marked.setOptions({
-                    breaks: true,
-                    gfm: true,
-                    sanitize: false, // We trust the AI responses
-                });
+                window.marked.setOptions({ breaks: true, gfm: true });
                 let rendered = window.marked.parse(content);
+                // Basic sanitize: strip script tags as a quick win without new deps
+                rendered = rendered.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '');
                 rendered = this.wrapWordsInSpans(rendered);
                 return rendered;
             } catch (error) {
@@ -384,12 +381,17 @@ export class AssistantView extends LitElement {
     }
 
     getResponseCounter() {
-        return this.responses.length > 0 ? `${this.currentResponseIndex + 1}/${this.responses.length}` : '';
+        if (this.responses.length === 0) return '';
+        // Ensure currentResponseIndex is always valid
+        const validIndex = Math.max(0, Math.min(this.currentResponseIndex, this.responses.length - 1));
+        return `${validIndex + 1}/${this.responses.length}`;
     }
 
     navigateToPreviousResponse() {
         if (this.currentResponseIndex > 0) {
             this.currentResponseIndex--;
+            // Disable animation for navigation
+            this.shouldAnimateResponse = false;
             this.dispatchEvent(
                 new CustomEvent('response-index-changed', {
                     detail: { index: this.currentResponseIndex },
@@ -402,6 +404,8 @@ export class AssistantView extends LitElement {
     navigateToNextResponse() {
         if (this.currentResponseIndex < this.responses.length - 1) {
             this.currentResponseIndex++;
+            // Disable animation for navigation
+            this.shouldAnimateResponse = false;
             this.dispatchEvent(
                 new CustomEvent('response-index-changed', {
                     detail: { index: this.currentResponseIndex },
@@ -430,7 +434,7 @@ export class AssistantView extends LitElement {
     loadFontSize() {
         const fontSize = localStorage.getItem('fontSize');
         if (fontSize !== null) {
-            const fontSizeValue = parseInt(fontSize, 10) || 20;
+            const fontSizeValue = parseInt(fontSize, 10) || 18;
             const root = document.documentElement;
             root.style.setProperty('--response-font-size', `${fontSizeValue}px`);
         }
@@ -565,24 +569,33 @@ export class AssistantView extends LitElement {
             const renderedResponse = this.renderMarkdown(currentResponse);
             console.log('Rendered response:', renderedResponse);
             container.innerHTML = renderedResponse;
+            
+            // Force immediate visibility for navigation responses
             const words = container.querySelectorAll('[data-word]');
-            if (this.shouldAnimateResponse) {
-                for (let i = 0; i < this._lastAnimatedWordCount && i < words.length; i++) {
-                    words[i].classList.add('visible');
-                }
-                for (let i = this._lastAnimatedWordCount; i < words.length; i++) {
-                    words[i].classList.remove('visible');
-                    setTimeout(() => {
-                        words[i].classList.add('visible');
-                        if (i === words.length - 1) {
-                            this.dispatchEvent(new CustomEvent('response-animation-complete', { bubbles: true, composed: true }));
-                        }
-                    }, (i - this._lastAnimatedWordCount) * 100);
-                }
-                this._lastAnimatedWordCount = words.length;
-            } else {
+            if (!this.shouldAnimateResponse) {
+                // For navigation, show all words immediately
                 words.forEach(word => word.classList.add('visible'));
                 this._lastAnimatedWordCount = words.length;
+            } else {
+                // For new responses, animate them
+                if (this.shouldAnimateResponse) {
+                    for (let i = 0; i < this._lastAnimatedWordCount && i < words.length; i++) {
+                        words[i].classList.add('visible');
+                    }
+                    for (let i = this._lastAnimatedWordCount; i < words.length; i++) {
+                        words[i].classList.remove('visible');
+                        setTimeout(() => {
+                            words[i].classList.add('visible');
+                            if (i === words.length - 1) {
+                                this.dispatchEvent(new CustomEvent('response-animation-complete', { bubbles: true, composed: true }));
+                            }
+                        }, (i - this._lastAnimatedWordCount) * 100);
+                    }
+                    this._lastAnimatedWordCount = words.length;
+                } else {
+                    words.forEach(word => word.classList.add('visible'));
+                    this._lastAnimatedWordCount = words.length;
+                }
             }
         } else {
             console.log('Response container not found');

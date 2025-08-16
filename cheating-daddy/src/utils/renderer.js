@@ -549,11 +549,34 @@ async function captureScreenshot(imageQuality = 'medium', isManual = false) {
     );
 }
 
+function captureScreenshotPromise(imageQuality = 'medium', isManual = false) {
+    return new Promise(resolve => {
+        const originalInvoke = ipcRenderer.invoke.bind(ipcRenderer);
+        let restored = false;
+        ipcRenderer.invoke = async (channel, payload) => {
+            const result = await originalInvoke(channel, payload);
+            if (!restored && channel === 'send-image-content') {
+                restored = true;
+                ipcRenderer.invoke = originalInvoke;
+                resolve();
+            }
+            return result;
+        };
+        captureScreenshot(imageQuality, isManual);
+        // Safety restore after 5s in case no image is sent
+        setTimeout(() => {
+            if (!restored) {
+                ipcRenderer.invoke = originalInvoke;
+                resolve();
+            }
+        }, 5000);
+    });
+}
+
 async function captureManualScreenshot(imageQuality = null) {
     console.log('Manual screenshot triggered');
     const quality = imageQuality || currentImageQuality;
-    await captureScreenshot(quality, true); // Pass true for isManual
-    await new Promise(resolve => setTimeout(resolve, 2000)); // TODO shitty hack
+    await captureScreenshotPromise(quality, true);
     await sendTextMessage(`Help me on this page, give me the answer no bs, complete answer.
         So if its a code question, give me the approach in few bullet points, then the entire code. Also if theres anything else i need to know, tell me.
         If its a question about the website, give me the answer no bs, complete answer.

@@ -8,13 +8,12 @@ interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({ className = '', size = 'md' }) => {
-const sizeMap = {
-  sm: 'h-8',        // 2rem
-  md: 'h-12',       // 3rem
-  lg: 'h-16',       // 4rem
-  xl: 'h-20',       // 5rem
-  customNav: 'h-10' // 2.5rem ✅ perfect navbar size
-}
+  const sizeMap = {
+    sm: 'h-8',     // small
+    md: 'h-12',    // medium
+    lg: 'h-16',    // large
+    xl: 'h-20'     // extra large
+  }
 
   // If className has an h-* utility, skip sizeMap
   const hasCustomHeight = /\bh-\d+/.test(className)

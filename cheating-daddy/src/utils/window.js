@@ -41,7 +41,7 @@ function createWindow(sendToRenderer, geminiSessionRef, randomNames = null) {
         hiddenInMissionControl: true,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false, // TODO: change to true
+            contextIsolation: false, // TODO: change to true later with proper preload bridge
             backgroundThrottling: false,
             enableBlinkFeatures: 'GetDisplayMedia',
             webSecurity: true,
@@ -252,7 +252,7 @@ function updateGlobalShortcuts(keybinds, mainWindow, sendToRenderer, geminiSessi
 
                     // Use the new handleShortcut function
                     mainWindow.webContents.executeJavaScript(`
-                        cheddar.handleShortcut('${shortcutKey}');
+                        rehbar.handleShortcut('${shortcutKey}');
                     `);
                 } catch (error) {
                     console.error('Error handling next step shortcut:', error);
@@ -473,8 +473,8 @@ function setupWindowIpcHandlers(mainWindow, sendToRenderer, geminiSessionRef) {
             // Get current view and layout mode from renderer
             let viewName, layoutMode;
             try {
-                viewName = await event.sender.executeJavaScript('cheddar.getCurrentView()');
-                layoutMode = await event.sender.executeJavaScript('cheddar.getLayoutMode()');
+                viewName = await event.sender.executeJavaScript('rehbar.getCurrentView()');
+                layoutMode = await event.sender.executeJavaScript('rehbar.getLayoutMode()');
             } catch (error) {
                 console.warn('Failed to get view/layout from renderer, using defaults:', error);
                 viewName = 'main';

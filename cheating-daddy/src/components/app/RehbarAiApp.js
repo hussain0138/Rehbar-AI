@@ -7,6 +7,7 @@ import { HistoryView } from '../views/HistoryView.js';
 import { AssistantView } from '../views/AssistantView.js';
 import { OnboardingView } from '../views/OnboardingView.js';
 import { AdvancedView } from '../views/AdvancedView.js';
+import { PaymentView } from '../views/PaymentView.js';
 
 export class RehbarAiApp extends LitElement {
     static styles = css`
@@ -114,16 +115,13 @@ export class RehbarAiApp extends LitElement {
         _isClickThrough: { state: true },
         _awaitingNewResponse: { state: true },
         shouldAnimateResponse: { type: Boolean },
+        trialManager: { type: Object, state: true },
     };
 
     constructor() {
         super();
-        // Clear any existing API key and onboarding for fresh start
-        localStorage.removeItem('apiKey');
-        localStorage.removeItem('onboardingCompleted');
-
-        // Now set the view - since we cleared onboarding, it should show onboarding
-        this.currentView = 'onboarding';
+        // Determine initial view based on onboarding status
+        this.currentView = localStorage.getItem('onboardingCompleted') === 'true' ? 'main' : 'onboarding';
         this.statusText = '';
         this.startTime = null;
         this.isRecording = false;
@@ -141,13 +139,37 @@ export class RehbarAiApp extends LitElement {
         this._awaitingNewResponse = false;
         this._currentResponseIsComplete = true;
         this.shouldAnimateResponse = false;
+        this.trialManager = null;
 
         // Apply layout mode to document root
         this.updateLayoutMode();
     }
 
+    applyInterfaceSettings() {
+        // Apply background transparency
+        const backgroundTransparency = localStorage.getItem('backgroundTransparency');
+        if (backgroundTransparency !== null) {
+            const opacity = parseInt(backgroundTransparency, 10) / 100;
+            document.documentElement.style.setProperty('--main-content-background', `rgba(15, 23, 42, ${opacity})`);
+            document.documentElement.style.setProperty('--header-background', `rgba(15, 23, 42, ${opacity})`);
+        }
+
+        // Apply font size
+        const fontSize = localStorage.getItem('fontSize');
+        if (fontSize !== null) {
+            const fontSizeValue = parseInt(fontSize, 10) || 18;
+            document.documentElement.style.setProperty('--response-font-size', `${fontSizeValue}px`);
+        }
+    }
+
     connectedCallback() {
         super.connectedCallback();
+
+        // Apply saved interface settings
+        this.applyInterfaceSettings();
+
+        // Initialize trial manager
+        this.initializeTrialManager();
 
         // Set up IPC listeners if needed
         if (window.require) {
@@ -162,6 +184,9 @@ export class RehbarAiApp extends LitElement {
                 this._isClickThrough = isEnabled;
             });
         }
+
+        // Listen for interface setting changes from child components
+        this.addEventListener('interface-setting-changed', this.handleInterfaceSettingChange.bind(this));
     }
 
     disconnectedCallback() {
@@ -172,6 +197,78 @@ export class RehbarAiApp extends LitElement {
             ipcRenderer.removeAllListeners('update-status');
             ipcRenderer.removeAllListeners('click-through-toggled');
         }
+        
+        // Remove interface setting change listener
+        this.removeEventListener('interface-setting-changed', this.handleInterfaceSettingChange.bind(this));
+    }
+
+    handleInterfaceSettingChange(event) {
+        const { type, value } = event.detail;
+        
+        if (type === 'backgroundTransparency') {
+            const opacity = value / 100;
+            document.documentElement.style.setProperty('--main-content-background', `rgba(15, 23, 42, ${opacity})`);
+            document.documentElement.style.setProperty('--header-background', `rgba(15, 23, 42, ${opacity})`);
+        } else if (type === 'fontSize') {
+            document.documentElement.style.setProperty('--response-font-size', `${value}px`);
+        }
+    }
+
+    initializeTrialManager() {
+        // Load trial manager script and initialize
+        if (!window.TrialManager) {
+            const script = document.createElement('script');
+            script.src = 'utils/trialManager.js';
+            script.onload = () => {
+                this.trialManager = new window.TrialManager();
+                this.checkAccessAndRedirect();
+            };
+            script.onerror = () => {
+                console.error('Failed to load trial manager');
+                // Fallback: allow access but show warning
+                this.currentView = 'main';
+            };
+            document.head.appendChild(script);
+        } else {
+            this.trialManager = new window.TrialManager();
+            this.checkAccessAndRedirect();
+        }
+    }
+
+    checkAccessAndRedirect() {
+        if (!this.trialManager) return;
+
+        const accessCheck = this.trialManager.validateAccess();
+        
+        if (!accessCheck.hasAccess) {
+            if (accessCheck.reason === 'trial_expired') {
+                this.currentView = 'payment';
+            } else {
+                // For suspicious activity, show error
+                this.currentView = 'main';
+                // You could show a modal or notification here
+            }
+            this.requestUpdate();
+        }
+    }
+
+    handlePaymentSuccess(plan) {
+        console.log('Payment successful for plan:', plan);
+        // Redirect to main view after successful payment
+        this.currentView = 'main';
+        this.requestUpdate();
+        
+        // Show success message (you could implement a toast notification here)
+        if (this.trialManager) {
+            const paymentInfo = this.trialManager.getPaymentInfo();
+            console.log('Payment info updated:', paymentInfo);
+        }
+    }
+
+    handleUpgradeRequest() {
+        console.log('Upgrade requested from main view');
+        this.currentView = 'payment';
+        this.requestUpdate();
     }
 
     setStatus(text) {
@@ -205,6 +302,7 @@ export class RehbarAiApp extends LitElement {
             // For substantial responses, update the last one (streaming behavior)
             // Only update if the current response is not marked as complete
             this.responses = [...this.responses.slice(0, this.responses.length - 1), response];
+            // Keep current index when updating existing response
             console.log('[setResponse] Updated last response:', response);
         } else {
             // For filler responses or when current response is complete, add as new
@@ -213,6 +311,10 @@ export class RehbarAiApp extends LitElement {
             this._currentResponseIsComplete = false;
             console.log('[setResponse] Added response as new:', response);
         }
+        
+        // Ensure currentResponseIndex is always valid
+        this.currentResponseIndex = Math.max(0, Math.min(this.currentResponseIndex, this.responses.length - 1));
+        
         this.shouldAnimateResponse = true;
         this.requestUpdate();
     }
@@ -293,7 +395,7 @@ export class RehbarAiApp extends LitElement {
             // Pass the screenshot interval as string (including 'manual' option)
             window.rehbar.startCapture(this.selectedScreenshotInterval, this.selectedImageQuality);
             this.responses = [];
-            this.currentResponseIndex = -1;
+            this.currentResponseIndex = 0; // Start at 0 for proper indexing
             this.startTime = Date.now();
             this.currentView = 'assistant';
             console.log('Session started successfully');
@@ -424,6 +526,7 @@ export class RehbarAiApp extends LitElement {
                         .onStart=${() => this.handleStart()}
                         .onAPIKeyHelp=${() => this.handleAPIKeyHelp()}
                         .onLayoutModeChange=${layoutMode => this.handleLayoutModeChange(layoutMode)}
+                        @upgrade-requested=${() => this.handleUpgradeRequest()}
                     ></main-view>
                 `;
 
@@ -453,6 +556,13 @@ export class RehbarAiApp extends LitElement {
 
             case 'advanced':
                 return html` <advanced-view></advanced-view> `;
+
+            case 'payment':
+                return html`
+                    <payment-view
+                        @payment-success=${(event) => this.handlePaymentSuccess(event.detail.plan)}
+                    ></payment-view>
+                `;
 
             case 'assistant':
                 return html`

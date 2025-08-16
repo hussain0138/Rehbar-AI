@@ -99,6 +99,58 @@ export class MainView extends LitElement {
             border-color: var(--start-button-border);
         }
 
+        .trial-status {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .trial-status h3 {
+            color: #10b981;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .trial-status p {
+            color: var(--description-color);
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        .trial-progress {
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 4px;
+            height: 6px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        .trial-progress-bar {
+            background: #10b981;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .upgrade-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .upgrade-button:hover {
+            background: #2563eb;
+        }
+
         .shortcut-icons {
             display: flex;
             align-items: center;
@@ -281,9 +333,46 @@ export class MainView extends LitElement {
         }
     }
 
+    getTrialInfo() {
+        if (window.TrialManager) {
+            try {
+                const trialManager = new window.TrialManager();
+                return trialManager.getPaymentInfo();
+            } catch (e) {
+                console.warn('Failed to get trial info:', e);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    handleUpgradeClick() {
+        // Dispatch event to parent to switch to payment view
+        this.dispatchEvent(new CustomEvent('upgrade-requested', {
+            bubbles: true,
+            composed: true
+        }));
+    }
+
     render() {
+        const trialInfo = this.getTrialInfo();
+        
         return html`
             <div class="welcome">Welcome</div>
+
+            ${trialInfo ? html`
+                <div class="trial-status">
+                    <h3>🕐 Trial Status</h3>
+                    <p>${trialInfo.trialProgress.remaining} days remaining in your trial</p>
+                    <div class="trial-progress">
+                        <div class="trial-progress-bar" style="width: ${trialInfo.trialProgress.percentage}%"></div>
+                    </div>
+                    <p>${trialInfo.trialProgress.used} of ${trialInfo.trialProgress.total} days used</p>
+                    <button class="upgrade-button" @click=${this.handleUpgradeClick}>
+                        Upgrade Now
+                    </button>
+                </div>
+            ` : ''}
 
             <div class="input-group">
                 <input
@@ -293,13 +382,13 @@ export class MainView extends LitElement {
                     @input=${this.handleInput}
                     class="${this.showApiKeyError ? 'api-key-error' : ''}"
                 />
-                <button @click=${this.handleStartClick} class="start-button ${this.isInitializing ? 'initializing' : ''}">
+                <button @click=${this.handleStartClick} class="start-button ${this.isInitializing ? 'initializing' : ''}" ?disabled=${this.isInitializing}>
                     ${this.getStartButtonText()}
                 </button>
             </div>
             <p class="description">
-                dont have an api key?
-                <span @click=${this.handleAPIKeyHelpClick} class="link">get one here</span>
+                Don't have an API key?
+                <span @click=${this.handleAPIKeyHelpClick} class="link">Get one here</span>
             </p>
         `;
     }

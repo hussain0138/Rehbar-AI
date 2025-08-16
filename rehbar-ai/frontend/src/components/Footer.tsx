@@ -69,7 +69,7 @@ export const Footer = () => {
 <Logo
   className="h-40 w-auto max-h-none"
   size="lg"
-  showText={false}
+  
 />
 
             </Link>

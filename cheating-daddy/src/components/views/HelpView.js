@@ -307,10 +307,10 @@ export class HelpView extends LitElement {
                         <div class="community-link" @click=${() => this.handleExternalLinkClick('https://rehbar-ai-enkv.vercel.app/')}>
                             🌐 Official Website
                         </div>
-                        <div class="community-link" @click=${() => this.handleExternalLinkClick('#')}>
+                        <div class="community-link" @click=${() => this.handleExternalLinkClick('https://rehbar-ai-enkv.vercel.app/')}>
                             📂 GitHub Repository
                         </div>
-                        <div class="community-link" @click=${() => this.handleExternalLinkClick('#')}>
+                        <div class="community-link" @click=${() => this.handleExternalLinkClick('https://rehbar-ai-enkv.vercel.app/')}>
                             💬 Discord Community
                         </div>
                     </div>

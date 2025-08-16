@@ -71,6 +71,50 @@ export class CustomizeView extends LitElement {
             font-size: 12px;
             margin-top: 5px;
         }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(59, 130, 246, 0.3);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #2563eb;
+            transform: scale(1.1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #2563eb;
+            transform: scale(1.1);
+        }
     `;
 
     static properties = {
@@ -80,6 +124,9 @@ export class CustomizeView extends LitElement {
         selectedImageQuality: { type: String },
         layoutMode: { type: String },
         advancedMode: { type: Boolean },
+        googleSearchEnabled: { type: Boolean },
+        backgroundTransparency: { type: Number },
+        fontSize: { type: Number },
         onProfileChange: { type: Function },
         onLanguageChange: { type: Function },
         onScreenshotIntervalChange: { type: Function },
@@ -96,12 +143,22 @@ export class CustomizeView extends LitElement {
         this.selectedImageQuality = 'medium';
         this.layoutMode = 'normal';
         this.advancedMode = false;
+        this.googleSearchEnabled = (localStorage.getItem('googleSearchEnabled') || 'true') === 'true';
+        this.backgroundTransparency = parseInt(localStorage.getItem('backgroundTransparency') || '90', 10);
+        this.fontSize = parseInt(localStorage.getItem('fontSize') || '18', 10);
         this.onProfileChange = () => {};
         this.onLanguageChange = () => {};
         this.onScreenshotIntervalChange = () => {};
         this.onImageQualityChange = () => {};
         this.onLayoutModeChange = () => {};
         this.onAdvancedModeChange = () => {};
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        // Apply current settings when component loads
+        this.applyBackgroundTransparency();
+        this.applyFontSize();
     }
 
     getProfiles() {
@@ -164,6 +221,57 @@ export class CustomizeView extends LitElement {
         this.advancedMode = e.target.value === 'true';
         localStorage.setItem('advancedMode', this.advancedMode);
         this.onAdvancedModeChange(this.advancedMode);
+    }
+
+    handleGoogleSearchToggle(e) {
+        this.googleSearchEnabled = e.target.checked;
+        localStorage.setItem('googleSearchEnabled', this.googleSearchEnabled ? 'true' : 'false');
+        if (window.require) {
+            const { ipcRenderer } = window.require('electron');
+            ipcRenderer.invoke('update-google-search-setting', this.googleSearchEnabled).catch(() => {});
+        }
+    }
+
+    handleBackgroundTransparencyChange(e) {
+        this.backgroundTransparency = parseInt(e.target.value, 10);
+        localStorage.setItem('backgroundTransparency', this.backgroundTransparency.toString());
+        this.applyBackgroundTransparency();
+    }
+
+    handleFontSizeChange(e) {
+        this.fontSize = parseInt(e.target.value, 10);
+        localStorage.setItem('fontSize', this.fontSize.toString());
+        this.applyFontSize();
+    }
+
+    applyBackgroundTransparency() {
+        const opacity = this.backgroundTransparency / 100;
+        document.documentElement.style.setProperty('--main-content-background', `rgba(15, 23, 42, ${opacity})`);
+        document.documentElement.style.setProperty('--header-background', `rgba(15, 23, 42, ${opacity})`);
+        
+        // Notify parent app to update its settings
+        this.dispatchEvent(new CustomEvent('interface-setting-changed', {
+            detail: { 
+                type: 'backgroundTransparency', 
+                value: this.backgroundTransparency 
+            },
+            bubbles: true,
+            composed: true
+        }));
+    }
+
+    applyFontSize() {
+        document.documentElement.style.setProperty('--response-font-size', `${this.fontSize}px`);
+        
+        // Notify parent app to update its settings
+        this.dispatchEvent(new CustomEvent('interface-setting-changed', {
+            detail: { 
+                type: 'fontSize', 
+                value: this.fontSize 
+            },
+            bubbles: true,
+            composed: true
+        }));
     }
 
     render() {
@@ -266,6 +374,38 @@ export class CustomizeView extends LitElement {
 
                     <div class="form-group">
                         <label class="form-label">
+                            Background Transparency
+                            <span class="current-selection">(Current: ${this.backgroundTransparency}%)</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            min="0" 
+                            max="100" 
+                            .value=${this.backgroundTransparency} 
+                            @input=${this.handleBackgroundTransparencyChange}
+                            class="form-control"
+                        />
+                        <div class="form-description">Adjust the transparency of the app background (0% = fully transparent, 100% = fully opaque)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Font Size
+                            <span class="current-selection">(Current: ${this.fontSize}px)</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            min="12" 
+                            max="32" 
+                            .value=${this.fontSize} 
+                            @input=${this.handleFontSizeChange}
+                            class="form-control"
+                        />
+                        <div class="form-description">Adjust the font size for better readability (12px = small, 32px = large)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
                             Advanced Mode
                             <span class="current-selection">(Current: ${this.advancedMode ? 'Enabled' : 'Disabled'})</span>
                         </label>
@@ -274,6 +414,17 @@ export class CustomizeView extends LitElement {
                             <option value="true">Enabled</option>
                         </select>
                         <div class="form-description">Enable advanced features and developer tools</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Google Search Tool
+                            <span class="current-selection">(Current: ${this.googleSearchEnabled ? 'Enabled' : 'Disabled'})</span>
+                        </label>
+                        <div>
+                            <input type="checkbox" .checked=${this.googleSearchEnabled} @change=${this.handleGoogleSearchToggle} />
+                            <span class="form-description">Allow the model to use Google Search when needed</span>
+                        </div>
                     </div>
                 </div>
             </div>

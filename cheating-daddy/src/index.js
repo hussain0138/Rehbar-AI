@@ -134,11 +134,13 @@ function setupGeneralIpcHandlers() {
     ipcMain.handle('update-content-protection', async (event, contentProtection) => {
         try {
             if (mainWindow) {
-
-                // Get content protection setting from localStorage via rehbar
-                const contentProtection = await mainWindow.webContents.executeJavaScript('rehbar.getContentProtection()');
-                mainWindow.setContentProtection(contentProtection);
-                console.log('Content protection updated:', contentProtection);
+                // Use the provided argument when available; otherwise read from renderer
+                let enabled = contentProtection;
+                if (typeof enabled !== 'boolean') {
+                    enabled = await mainWindow.webContents.executeJavaScript('rehbar.getContentProtection()');
+                }
+                mainWindow.setContentProtection(!!enabled);
+                console.log('Content protection updated:', !!enabled);
             }
             return { success: true };
         } catch (error) {
